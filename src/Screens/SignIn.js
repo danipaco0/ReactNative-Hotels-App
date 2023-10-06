@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { View,StyleSheet } from 'react-native';
-import InputBox from '../../Components/InputBox/InputBox';
+import InputBox from '../Components/InputBox';
 
 const SignInScreen = () => {
     const [username,setUsername] = useState('');
