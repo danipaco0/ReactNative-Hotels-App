@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet} from 'react-native';
+import { View, TextInput, StyleSheet} from 'react-native';
 
 const InputBox = ({value, setValue, placeholder}) => {
     return (
@@ -20,7 +20,8 @@ const styles = StyleSheet.create({
         width:200,
         height:40,
         justifyContent:'space-evenly',
-        alignItems:'center'
+        alignItems:'center',
+        borderRadius:5
     },
     box:{
         fontSize:20
