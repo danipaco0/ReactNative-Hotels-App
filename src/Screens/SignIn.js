@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import { View,StyleSheet, TouchableOpacity } from 'react-native';
+import { View,StyleSheet, Image } from 'react-native';
 import InputBox from '../Components/InputBox';
 import CustomButton from '../Components/CustomButton';
+import Logo from '../assets/logo.png'
 
 const SignInScreen = () => {
     const [username,setUsername] = useState('');
@@ -9,10 +10,11 @@ const SignInScreen = () => {
 
     return (
         <View style={styles.container}>
+            <Image source={Logo} style={styles.logoStyle}/>
             <InputBox placeholder="Username" value={username} setValue={setUsername}/>
             <InputBox placeholder="Password" value={password} setValue={setPassword}/>
-            <CustomButton action='Sign in' onPress={onSignInPressed} backcolor={'#5f9ea0'} bordercolor={'#5f9ea0'} textcolor={'white'}/>
-            <CustomButton action='Sign up' onPress={onSignUpPressed} backcolor={'white'} bordercolor={'#5f9ea0'} textcolor={'#5f9ea0'}/>
+            <CustomButton action='Sign in' onPress={onSignInPressed} backcolor={'#26be81'} bordercolor={'#26be81'} textcolor={'white'}/>
+            <CustomButton action='Sign up' onPress={onSignUpPressed} backcolor={'white'} bordercolor={'#26be81'} textcolor={'#26be81'}/>
         </View>
     )
 };
@@ -29,6 +31,12 @@ const styles = StyleSheet.create({
     container:{
         alignItems:'center',
         justifyContent:'center'
+    },
+    logoStyle:{
+        width:200,
+        height:100,
+        borderRadius:10,
+        marginTop:10
     }
 });
 
