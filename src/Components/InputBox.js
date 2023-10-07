@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
         height:40,
         justifyContent:'space-evenly',
         alignItems:'center',
-        borderRadius:5
+        borderRadius:5,
+        marginTop:20
     },
     box:{
         fontSize:20
