@@ -16,7 +16,7 @@ const InputBox = ({value, setValue, placeholder}) => {
 
 const styles = StyleSheet.create({
     container:{
-        backgroundColor:'#f0f8ff',
+        backgroundColor:'white',
         width:200,
         height:40,
         justifyContent:'space-evenly',
@@ -25,7 +25,8 @@ const styles = StyleSheet.create({
         marginTop:20
     },
     box:{
-        fontSize:20
+        fontSize:20,
+        color:'black'
     }
 });
 
