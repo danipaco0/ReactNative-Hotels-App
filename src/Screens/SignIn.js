@@ -6,15 +6,17 @@ import Logo from '../assets/logo.png'
 import { auth } from '../../firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigation } from '@react-navigation/native';
 
 const SignInScreen = () => {
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
+    const navigation = useNavigation();
 
     const onSignInPressed = () => {
         signInWithEmailAndPassword(auth,email,password)
         .then((re)=>{
-            console.log("OK")
+            navigation.navigate("Home")
         })
         .catch(error => alert(error.message))
     };
