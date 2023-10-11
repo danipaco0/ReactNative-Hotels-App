@@ -32,8 +32,8 @@ const SignInScreen = () => {
     return (
         <View style={styles.container}>
             <Image source={Logo} style={styles.logoStyle}/>
-            <InputBox placeholder="Email" value={email} setValue={setEmail}/>
-            <InputBox placeholder="Password" value={password} setValue={setPassword}/>
+            <InputBox placeholder="Email" value={email} setValue={setEmail} borderColor={'white'}/>
+            <InputBox placeholder="Password" value={password} setValue={setPassword} borderColor={'white'}/>
             <CustomButton action='Sign in' onPress={onSignInPressed} backcolor={'#26be81'} bordercolor={'#26be81'} textcolor={'white'}/>
             <CustomButton action='Sign up' onPress={onSignUpPressed} backcolor={'white'} bordercolor={'#26be81'} textcolor={'#26be81'}/>
         </View>

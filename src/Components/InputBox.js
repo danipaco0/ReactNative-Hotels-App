@@ -1,9 +1,13 @@
 import React from 'react';
 import { View, TextInput, StyleSheet} from 'react-native';
 
-const InputBox = ({value, setValue, placeholder}) => {
+const InputBox = ({value, setValue, placeholder, bordercolor}) => {
+    const colorStyle = {
+        ...styles.container,
+        borderColor:bordercolor
+    }
     return (
-        <View style={styles.container}>
+        <View style={colorStyle}>
             <TextInput 
                 style={styles.box}
                 value={value}
@@ -22,7 +26,8 @@ const styles = StyleSheet.create({
         justifyContent:'space-evenly',
         alignItems:'center',
         borderRadius:5,
-        marginTop:20
+        marginTop:20,
+        borderWidth:2
     },
     box:{
         fontSize:20,
