@@ -3,8 +3,9 @@ import InputBox from '../Components/InputBox';
 import MapView, { PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import { View,StyleSheet, Animated } from 'react-native';
 import CustomButton from '../Components/CustomButton';
+import MenuButton from '../Components/MenuButton';
 
-export default function App() {
+export default function HomePage() {
     let location = {
         latitude: 50.811662,
         longitude: 4.378989,
@@ -23,9 +24,13 @@ export default function App() {
         }
     }
 
+    const onPressMenu = () => {
+        console.log("Menu")
+    }
+
     return (
         <View style={styles.container}>
-            <MapView style={styles.container}
+            <MapView style={styles.map}
                 provider={PROVIDER_GOOGLE}
                 mapType='standard'
                 initialRegion={location}
@@ -36,12 +41,18 @@ export default function App() {
                 <InputBox placeholder="City" value={city} setValue={setCity} bordercolor={'#26be81'}/>
                 <CustomButton action="Search" onPress="Nothing" backcolor={'#26be81'} bordercolor={'#26be81'} textcolor={'white'}/>
             </Animated.View>
+            <View style={styles.menu}>
+                <MenuButton onPress={onPressMenu}/>
+            </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container:{
+        flex:1
+    },
+    map:{
         flex:1
     },
     searchBox:{
@@ -55,5 +66,11 @@ const styles = StyleSheet.create({
         borderRadius:10,
         borderWidth:2,
         borderColor:'#26BE81'
+    },
+    menu:{
+        position:'absolute',
+        left:20,
+        top:50,
+        backgroundColor:'transparent'
     }
   });
