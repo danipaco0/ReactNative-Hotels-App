@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import InputBox from '../Components/InputBox';
 import MapView, { PROVIDER_GOOGLE, Marker} from 'react-native-maps';
-import { View,StyleSheet, Button, TouchableHighlight } from 'react-native';
+import { View,StyleSheet, Animated } from 'react-native';
 import CustomButton from '../Components/CustomButton';
 
 export default function App() {
@@ -13,15 +13,15 @@ export default function App() {
     };
 
     const [city,setCity] = useState('');
-    const [searchBottom, setSearchBottom] = useState(40);
     const [mapFocus, setMapFocus] = useState(false);
-    
+    const progress = useRef(new Animated.Value(40)).current;
+
     const onMapDrag = () => {
         if(!mapFocus){
-            setSearchBottom(searchBottom-80);
             setMapFocus(true);
+            Animated.timing(progress,{toValue:-60,duration:1000,useNativeDriver:false}).start();
         }
-    };
+    }
 
     return (
         <View style={styles.container}>
@@ -32,10 +32,10 @@ export default function App() {
                 onRegionChangeComplete={onMapDrag}>
                     <Marker coordinate={{ latitude: 50.811662, longitude: 4.378989 }}/>
             </MapView>
-            <View style={[styles.searchBox,{bottom:searchBottom}]}>
+            <Animated.View style={[styles.searchBox,{bottom:progress}]}>
                 <InputBox placeholder="City" value={city} setValue={setCity} bordercolor={'#26be81'}/>
                 <CustomButton action="Search" onPress="Nothing" backcolor={'#26be81'} bordercolor={'#26be81'} textcolor={'white'}/>
-            </View>
+            </Animated.View>
         </View>
     );
 }
