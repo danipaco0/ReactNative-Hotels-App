@@ -16,13 +16,13 @@ const styles = StyleSheet.create({
         justifyContent:'space-evenly',
         alignItems:'center',
         width:30,
-        height:35,
+        height:25,
         backgroundColor:'transparent'
     },
     line:{
         borderRadius:10,
-        width:30,
-        height:5,
-        backgroundColor:'#26be81'
+        width:25,
+        height:2,
+        backgroundColor:'white'
     }
 });
