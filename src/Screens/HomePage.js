@@ -5,20 +5,38 @@ import { View,StyleSheet, Animated } from 'react-native';
 import CustomButton from '../Components/CustomButton';
 import MenuButton from '../Components/MenuButton';
 import MenuBar from '../Components/MenuBar';
+import * as Location from 'expo-location';
 
 export default function HomePage() {
-    let location = {
-        latitude: 50.811662,
-        longitude: 4.378989,
-        latitudeDelta: 0.009,
-        longitudeDelta: 0.009
-    };
-
     const [city,setCity] = useState('');
     const [mapFocus, setMapFocus] = useState(false);
     const [menuOpened, setMenuOpened] = useState(false);
+    const [location, setLocation] = useState(null);
     const progress = useRef(new Animated.Value(40)).current;
     const menuBarAnimation = useRef(new Animated.Value(-250)).current;
+    
+    useEffect(() => {
+        (async () => {
+            let{ status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted'){
+                setErrorMsg('Permission to access location was denied');
+                return;
+            }
+            try {
+                const position = await Location.getCurrentPositionAsync();
+                if (position && position.coords) {
+                    const { latitude, longitude } = position.coords;
+                    const latitudeDelta = 0.009;
+                    const longitudeDelta = 0.009;
+                    setLocation({ latitude, longitude, latitudeDelta, longitudeDelta });
+                } else {
+                    console.error('Location data is missing.');
+                }
+            } catch (error) {
+                console.error('Error getting location:', error);
+            }
+        })();
+    },[]);
 
     const onMapDrag = () => {
         if(!mapFocus && !menuOpened){
@@ -47,7 +65,6 @@ export default function HomePage() {
                 initialRegion={location}
                 onRegionChangeComplete={onMapDrag}
                 onPress={onPressMap}>
-                    <Marker coordinate={{ latitude: 50.811662, longitude: 4.378989 }}/>
             </MapView>
             <Animated.View style={[styles.searchBox,{bottom:progress}]} onPress={onPressMap}>
                 <InputBox placeholder="City" value={city} setValue={setCity} bordercolor={'#26be81'}/>
