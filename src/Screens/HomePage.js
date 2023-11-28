@@ -46,14 +46,14 @@ export default function HomePage() {
     }
 
     const onPressMenu = () => {
-        Animated.timing(menuBarAnimation,{toValue:0,duration:1000,useNativeDriver:false}).start();
+        Animated.timing(menuBarAnimation,{toValue:0,duration:500,useNativeDriver:false}).start();
         setMenuOpened(true);
     }
 
     const onPressMap = () => {
         if(menuOpened){
             setMenuOpened(false);
-            Animated.timing(menuBarAnimation,{toValue:-250,duration:1000,useNativeDriver:false}).start();
+            Animated.timing(menuBarAnimation,{toValue:-250,duration:500,useNativeDriver:false}).start();
         }
     }
 

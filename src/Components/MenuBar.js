@@ -1,11 +1,14 @@
 import React from 'react';
 import { StyleSheet,TouchableOpacity,View,Text,Image, Dimensions } from 'react-native';
-import profilePicture from '../assets/profile.png'
+import profilePicture from '../assets/profile.png';
+import { useNavigation } from '@react-navigation/native';
 
 export default function MenuBar(){
+    const navigation = useNavigation();
+
     return(
         <View style={styles.container}>
-            <TouchableOpacity style={styles.profile}>
+            <TouchableOpacity style={styles.profile} onPress={() => navigation.navigate("Profile")}>
                 <Image style={styles.picture} source={profilePicture}/>
                 <Text style={styles.item}>Profile</Text>
             </TouchableOpacity>
