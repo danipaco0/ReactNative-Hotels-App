@@ -27,7 +27,6 @@ export default function SearchPage(){
                 <View style={styles.dot}/>
                 <Text style={{marginLeft:10, opacity:0.5}}>Children</Text>
             </TouchableOpacity>
-            
         </View>
     )
 }
