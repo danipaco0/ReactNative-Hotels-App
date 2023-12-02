@@ -1,52 +1,65 @@
 import React from 'react';
 import { StyleSheet,TouchableOpacity,View,Text,Image, Dimensions } from 'react-native';
 import profilePicture from '../assets/profile.png';
-import { useNavigation } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import ProfilePage from '../Screens/ProfilePage';
+import HomePage from '../Screens/HomePage';
 
-export default function MenuBar(){
-    const navigation = useNavigation();
+const Tab = createBottomTabNavigator();
 
+export default function MenuTabs(){
     return(
-        <View style={styles.container}>
-            <TouchableOpacity style={styles.profile} onPress={() => navigation.navigate("Profile")}>
-                <Image style={styles.picture} source={profilePicture}/>
-                <Text style={styles.item}>Profile</Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <Text style={styles.item}>Favorites</Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <Text style={styles.item}>About us</Text>
-            </TouchableOpacity>
-        </View>
-    );
+        <Tab.Navigator  initialRouteName="HomePage" screenOptions={styles.menu}>
+            <Tab.Screen name="Home" component={HomePage} 
+                        options={{
+                            tabBarIcon:({focused})=>{
+                                return(
+                                    <View style={styles.menuItemPosition}>
+                                        <Image name="profilePicture" size={24} color={focused ? "#26BE81":"#111"}/>
+                                        <Text style={styles.menuItemOptions}>HOME</Text>
+                                    </View>
+                                )
+                            }
+                        }}/>
+            <Tab.Screen name="Profile" component={ProfilePage}
+                        options={{
+                            tabBarIcon:({focused})=>{
+                                return(
+                                    <View style={styles.menuItemPosition}>
+                                        <Image name="profilePicture" size={24} color={focused ? "#26BE81":"#111"}/>
+                                        <Text style={styles.menuItemOptions}>PROFILE</Text>
+                                    </View>
+                                )
+                            }
+                        }}/>
+        </Tab.Navigator>
+    )
 }
 
 const styles = StyleSheet.create({
-    container:{
-        width:250,
-        height:Dimensions.get('screen').height,
-        justifyContent:'center',
-        alignItems:'center',
-        backgroundColor:'#26be81'
-    },
-    item:{
-        color:'white',
-        fontSize:25
-    },
     picture:{
         width:40,
         height:40,
         borderRadius:20,
         marginRight:20
     },
-    profile:{
-        flexDirection:'row',
-        justifyContent:'center',
+    menuItemPosition:{
         alignItems:'center',
-        borderBottomWidth:2,
-        borderBottomColor:'white',
-        width:'100%',
-        height:70
+        justifyContent:'center'
+    },
+    menuItemOptions:{
+        fontSize:12,
+        color:"#26BE81"
+    },
+    menu:{
+        tabBarShowLabel:false,
+        headerShown:false,
+        tabBarStyle:{
+            position:"absolute",
+            bottom:0,
+            right:0,
+            left:0,
+            height:60
+        }
     }
-})
+});

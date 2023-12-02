@@ -1,119 +1,57 @@
 import React, { useState, useRef, useEffect } from 'react';
 import InputBox from '../Components/InputBox';
 import MapView, { PROVIDER_GOOGLE, Marker} from 'react-native-maps';
-import { View,StyleSheet, Animated } from 'react-native';
-import CustomButton from '../Components/CustomButton';
-import MenuButton from '../Components/MenuButton';
-import MenuBar from '../Components/MenuBar';
+import { View,StyleSheet, Image, TouchableOpacity, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import * as Location from 'expo-location';
+import SearchIcon from '../assets/search_icon.png';
+import Paris from '../assets/paris.jpg';
 
 export default function HomePage() {
-    const [city,setCity] = useState('');
-    const [mapFocus, setMapFocus] = useState(false);
-    const [menuOpened, setMenuOpened] = useState(false);
-    const [location, setLocation] = useState(null);
-    const progress = useRef(new Animated.Value(40)).current;
-    const menuBarAnimation = useRef(new Animated.Value(-250)).current;
+    const navigation = useNavigation();
+
+    const onSearchPress = () => {
+        navigation.navigate("SearchScreen");
+    };
     
-    useEffect(() => {
-        (async () => {
-            let{ status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted'){
-                setErrorMsg('Permission to access location was denied');
-                return;
-            }
-            try {
-                const position = await Location.getCurrentPositionAsync();
-                if (position && position.coords) {
-                    const { latitude, longitude } = position.coords;
-                    const latitudeDelta = 0.009;
-                    const longitudeDelta = 0.009;
-                    setLocation({ latitude, longitude, latitudeDelta, longitudeDelta });
-                } else {
-                    console.error('Location data is missing.');
-                }
-            } catch (error) {
-                console.error('Error getting location:', error);
-            }
-        })();
-    },[]);
-
-    const onMapDrag = () => {
-        if(!mapFocus && !menuOpened){
-            setMapFocus(true);
-            Animated.timing(progress,{toValue:-60,duration:1000,useNativeDriver:false}).start();
-        }
-    }
-
-    const onPressMenu = () => {
-        Animated.timing(menuBarAnimation,{toValue:0,duration:500,useNativeDriver:false}).start();
-        setMenuOpened(true);
-    }
-
-    const onPressMap = () => {
-        if(menuOpened){
-            setMenuOpened(false);
-            Animated.timing(menuBarAnimation,{toValue:-250,duration:500,useNativeDriver:false}).start();
-        }
-    }
-
     return (
         <View style={styles.container}>
-            <MapView style={styles.map}
-                provider={PROVIDER_GOOGLE}
-                mapType='terrain'
-                initialRegion={location}
-                onRegionChangeComplete={onMapDrag}
-                onPress={onPressMap}>
-            </MapView>
-            <Animated.View style={[styles.searchBox,{bottom:progress}]} onPress={onPressMap}>
-                <InputBox placeholder="City" value={city} setValue={setCity} bordercolor={'#26be81'}/>
-                <CustomButton action="Search" onPress="Nothing" backcolor={'#26be81'} bordercolor={'#26be81'} textcolor={'white'}/>
-            </Animated.View>
-            <View style={styles.menuButton}>
-                <MenuButton onPress={onPressMenu}/>
+            <View style={styles.firstLayer}>
+                <Image source={Paris} resizeMode='contain' style={{width:600, height:1200}}/>
             </View>
-            <Animated.View style={[styles.menu,{left:menuBarAnimation}]}>
-                <MenuBar/>
-            </Animated.View>
+            <TouchableOpacity style={styles.searchBox} onPress={onSearchPress}>
+                <Image source={SearchIcon} style={styles.searchIcon}/>
+                <Text style={{opacity:0.5}}>Where are you going?</Text>
+            </TouchableOpacity>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container:{
-        flex:1
-    },
-    map:{
-        flex:1
+        flex:1,
+        alignItems:'center',
+        justifyContent:'flex-start',
+        position:'relative'
     },
     searchBox:{
-        position:'absolute',
-        alignSelf:'center',
+        flexDirection:'row',
         justifyContent:'center',
         alignItems:'center',
         backgroundColor:'white',
         width:'90%',
-        height:'90%',
-        borderRadius:10,
-        borderWidth:2,
-        borderColor:'#26BE81'
+        height:50,
+        borderRadius:25,
+        marginTop:50
     },
-    menuButton:{
-        position:'absolute',
-        left:20,
-        top:50,
-        backgroundColor:'#26be81',
-        borderRadius:20,
-        width:40,
-        height:40,
+    searchIcon:{
+        width:35,
+        height:35,
+        marginLeft:10
+    },
+    firstLayer:{
+        ...StyleSheet.absoluteFillObject,
         justifyContent:'center',
         alignItems:'center'
-    },
-    menu:{
-        position:'absolute',
-        justifyContent:'center',
-        alignItems:'center',
-        backgroundColor:'transparent'
     }
   });
