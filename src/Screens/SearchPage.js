@@ -1,7 +1,45 @@
 import { React, useState } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Modal, Button } from 'react-native';
 import Calendar from 'react-native-calendars/src/calendar';
-import AddRemoveButton from "../Components/AddRemoveButton";
+import axios from 'axios';
+import { useNavigation } from "@react-navigation/native";
+
+const options = {
+    method: 'GET',
+    url: 'https://apidojo-booking-v1.p.rapidapi.com/locations/auto-complete',
+    params: {
+      text: '',
+      languagecode: 'fr'
+    },
+    headers: {
+      'X-RapidAPI-Key': 'bd5acb5bd0msh2b1b7ef314eb43cp1f9f91jsn41d22e3fdab7',
+      'X-RapidAPI-Host': 'apidojo-booking-v1.p.rapidapi.com'
+    }
+};
+
+const filters = {
+    method: 'GET',
+    url: 'https://apidojo-booking-v1.p.rapidapi.com/properties/list',
+    params: {
+      offset: '0',
+      arrival_date: '',
+      departure_date: '',
+      guest_qty: '',
+      dest_ids: '',
+      room_qty: '',
+      search_type: 'latlong',
+      children_qty: '',
+      latitude:'',
+      longitude:'',
+      price_filter_currencycode: 'EUR',
+      order_by: 'popularity',
+      languagecode: 'fr'
+    },
+    headers: {
+      'X-RapidAPI-Key': 'bd5acb5bd0msh2b1b7ef314eb43cp1f9f91jsn41d22e3fdab7',
+      'X-RapidAPI-Host': 'apidojo-booking-v1.p.rapidapi.com'
+    }
+  };
 
 export default function SearchPage(){
     const [city, setCity] = useState();
@@ -11,8 +49,37 @@ export default function SearchPage(){
     const [rooms, setRooms] = useState(1);
     const [adults, setAdults] = useState(1);
     const [children, setChildren] = useState(0);
+    const [latitude, setLatitude] = useState();
+    const [longitude, setLongitude] = useState();
     const [showModalDate, setShowModalDate] = useState(false);
     const [showModalExtra, setShowModalExtra] = useState(false);
+
+    const navigation = useNavigation();
+
+    async function searchHotels() {
+        options.params.text = city;
+        filters.params.arrival_date = dateFrom;
+        filters.params.departure_date = dateTo;
+        filters.params.guest_qty = adults;
+        filters.params.children_qty = children;
+        filters.params.room_qty = rooms;
+        try {
+            const response = await axios.request(options);
+            setLatitude(response.data[0].latitude);
+            filters.params.latitude = latitude;
+            setLongitude(response.data[0].longitude);
+            filters.params.longitude = longitude;
+        } catch (error) {
+            console.error(error);
+        }
+        try {
+            const response = await axios.request(filters);
+            //console.log(response.data);
+            navigation.navigate("Map", {data:response.data, lat:latitude, long:longitude});
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return(
         <View style={styles.container}>
@@ -38,6 +105,7 @@ export default function SearchPage(){
                 <View style={styles.dot}/>
                 <Text style={{marginLeft:10, opacity:0.5}}>{children}</Text>
             </TouchableOpacity>
+            <Button style={styles.searchButton} title="Search" color="#26BE81" onPress={() => searchHotels()}/>
             <Modal visible={showModalDate} animationType="fade">
                 <Calendar style={{borderRadius:5, margin:40}} onDayPress={date => {
                     if(dateFromOrTo === 'From'){
@@ -134,5 +202,14 @@ const styles = StyleSheet.create({
         width:'70%',
         borderRadius:25,
         backgroundColor:"#26BE81"
+    },
+    searchButton:{
+        alignItems:'center',
+        justifyContent:'center',
+        height:100,
+        width:'50%',
+        borderRadius:25,
+        backgroundColor:"#26BE81",
+        marginTop:20
     }
 })
