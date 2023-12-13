@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { View,StyleSheet } from 'react-native';
 import * as Location from 'expo-location';
+import HotelInfo from '../Components/HotelInfo';
 
 function getHotelsInfos(array){
     const hotels = [];
@@ -20,6 +21,7 @@ export default function MapPage({route}) {
     const cityLatitude = route.params?.lat;
     const cityLongitude = route.params?.long;
     const markers = getHotelsInfos(data?.result || []);
+    const infosAnimation = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
         const requestLocation = async () => {
@@ -37,7 +39,7 @@ export default function MapPage({route}) {
     }, [cityLatitude, cityLongitude, data]);
 
     const showHotelInfos = (ind) => {
-        console.log(markers[ind]["hotel_id"]);
+        Animated.timing(infosAnimation,{toValue:0,duration:500,useNativeDriver:false}).start();
         setHotel(ind);
     };
     
@@ -55,6 +57,9 @@ export default function MapPage({route}) {
                         />
                     ))}
             </MapView>
+            <Animated.View>
+                <HotelInfo/>
+            </Animated.View>
         </View>
     );
 }
