@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { View,StyleSheet } from 'react-native';
+import { View,StyleSheet, Animated, Dimensions } from 'react-native';
 import * as Location from 'expo-location';
 import HotelInfo from '../Components/HotelInfo';
 
@@ -17,11 +17,16 @@ function getHotelsInfos(array){
 export default function MapPage({route}) {
     const [location, setLocation] = useState(null);
     const [hotel, setHotel] = useState();
+    const [photo, setPhoto] = useState();
+    const [hotelName, setHotelName] = useState("");
+    const [hotelUrl, setHotelUrl] = useState("");
+    const [hotelLocation, setHotelLocation] = useState("");
+    const [hotelDistance, setHotelDistance] = useState("");
     const data = route.params?.data;
     const cityLatitude = route.params?.lat;
     const cityLongitude = route.params?.long;
     const markers = getHotelsInfos(data?.result || []);
-    const infosAnimation = useRef(new Animated.Value(0)).current;
+    const infosAnimation = useRef(new Animated.Value(1000)).current;
 
     useEffect(() => {
         const requestLocation = async () => {
@@ -38,9 +43,22 @@ export default function MapPage({route}) {
         requestLocation();
     }, [cityLatitude, cityLongitude, data]);
 
-    const showHotelInfos = (ind) => {
+    const showHotelInfos = async (ind) => {
+        if(hotel != ind){
+            setHotel(ind);
+            for(key in markers){
+                if(key["hotel_id"] == hotel){
+                    setHotelName(markers[key]["hotel_name"]);
+                    setHotelLocation(markers[key]["city"]);
+                    setHotelDistance(markers[key]["distance"]);
+                    setHotelUrl(markers[key]["url"]);
+                    setPhoto(markers[key]["image_url"]);
+                    break;
+                }
+            }
+        }
+        console.log("START");
         Animated.timing(infosAnimation,{toValue:0,duration:500,useNativeDriver:false}).start();
-        setHotel(ind);
     };
     
     return (
@@ -57,8 +75,8 @@ export default function MapPage({route}) {
                         />
                     ))}
             </MapView>
-            <Animated.View>
-                <HotelInfo/>
+            <Animated.View style={[styles.preview,{top:infosAnimation}]}>
+                <HotelInfo preview={{uri:photo}} hotelName={hotelName} hotelLocation={hotelLocation} hotelUrl={hotelUrl} centerDistance={hotelDistance}/>
             </Animated.View>
         </View>
     );
@@ -99,5 +117,12 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         backgroundColor:'transparent'
+    },
+    preview:{
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+        alignContent:'center', 
+        alignSelf:'center', 
+        position:'absolute'
     }
   });

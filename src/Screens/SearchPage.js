@@ -65,17 +65,24 @@ export default function SearchPage(){
         filters.params.room_qty = rooms;
         try {
             const response = await axios.request(options);
-            setLatitude(response.data[0].latitude);
-            filters.params.latitude = latitude;
-            setLongitude(response.data[0].longitude);
-            filters.params.longitude = longitude;
-        } catch (error) {
-            console.error(error);
-        }
-        try {
-            const response = await axios.request(filters);
-            //console.log(response.data);
-            navigation.navigate("Map", {data:response.data, lat:latitude, long:longitude});
+            do{
+                setLatitude(response.data[0].latitude);
+                setLongitude(response.data[0].longitude);
+                filters.params.latitude = latitude;
+                filters.params.longitude = longitude;
+                console.log(response.data[0].latitude);
+                if(latitude == undefined){
+                    alert("Please try again.");
+                }
+                else{
+                    try {
+                        const response = await axios.request(filters);
+                        navigation.navigate("Map", {data:response.data, lat:latitude, long:longitude});
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+            }while(response.data && response.data.length <= 0)
         } catch (error) {
             console.error(error);
         }

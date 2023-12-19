@@ -7,15 +7,20 @@ import { auth } from '../../firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
+import { useGlobalState } from '../Context/GlobalStateContext';
 
 const SignInScreen = () => {
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
     const navigation = useNavigation();
+    const { state, dispatch } = useGlobalState();
+    const [user, setUser] = useState('');
 
     const onSignInPressed = () => {
         signInWithEmailAndPassword(auth,email,password)
         .then((re)=>{
+            setUser(email);
+            dispatch({type:'SET_USER', payload:{user}})
             navigation.navigate("Home")
         })
         .catch(error => alert(error.message))
