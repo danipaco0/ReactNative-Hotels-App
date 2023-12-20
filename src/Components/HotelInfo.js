@@ -12,7 +12,7 @@ export default function HotelInfo({preview, hotelName, hotelLocation, hotelUrl, 
     const AddToFavorites = async () => {
         let doc = await addDoc(favoritesRef, {
             name:hotelName,
-            //photo:preview,
+            photo:preview,
             city:hotelLocation,
             url:hotelUrl,
             center:centerDistance,
@@ -27,24 +27,26 @@ export default function HotelInfo({preview, hotelName, hotelLocation, hotelUrl, 
     return(
         <View style={styles.container}>
             <Image source={preview} style={styles.firstLayer}/>
-            <BlurView intensity={100} style={styles.infosContainer}>
-                <View style={{flexDirection:"row"}}>
-                    <View style={{flexDirection:"column"}}>
-                        <Text style={{fontWeight:'bold', fontSize:30, color:'white', left:10, width:'70%', bottom:30, maxHeight:100}}>{hotelName}</Text>
-                        <View style={{flexDirection:'row', left:10, bottom:20}}>
+            <BlurView intensity={100} style={[styles.infosContainer,{justifyContent:'space-between', borderRadius:20, overflow:'hidden'}]}>
+                <View style={{flexDirection:"column", top:15, justifyContent:'space-between'}}>
+                    <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                        <Text style={{fontWeight:'bold', fontSize:25, color:'white', left:10, maxHeight:150, maxWidth:250}}>{hotelName}</Text>
+                        <View style={{flexDirection:'column', maxWidth:150, right:20, alignSelf:'center'}}>
+                            <Text style={{fontWeight:'900',fontSize:18, color:'white',alignSelf:'center'}}>{price}</Text>
+                            <Text style={{fontWeight:'500',fontSize:15, color:'white', alignSelf:'center'}}>/per night</Text>
+                        </View>
+                    </View>
+                    <View style={{flexDirection:'row', left:10, top:10, justifyContent:'space-between'}}>
+                        <View style={{flexDirection:'row'}}>
                             <Text style={{fontWeight:'500', fontSize:15, color:'white'}}>{hotelLocation}</Text>
-                            <View style={{left:30, flexDirection:"row"}}>
-                                <Image source={locationIcon} style={{height:20,width:20}}/>
+                            <View style={{left:20, flexDirection:"row"}}>
+                                <Image source={locationIcon} style={{height:15,width:15}}/>
                                 <Text style={{fontWeight:'500', fontSize:15, left:10, color:'white'}}>{centerDistance} km to city</Text>
                             </View>
                         </View>
                     </View>
-                    <View style={{flexDirection:'column', maxWidth:150, right:50,top:20}}>
-                        <Text style={{fontWeight:'900',fontSize:18, color:'white',alignSelf:'center'}}>{price}</Text>
-                        <Text style={{fontWeight:'500',fontSize:15, color:'white', alignSelf:'center'}}>/per night</Text>
-                    </View>
                 </View>
-                <TouchableOpacity onPress={() => Linking.openURL(hotelUrl)}>
+                <TouchableOpacity  style={{bottom:25}} onPress={() => Linking.openURL(hotelUrl)}>
                     <View style={styles.button}>
                         <Text style={{fontWeight:'500', fontSize:15, color:'white'}}>Book now!</Text>
                     </View>
@@ -66,7 +68,6 @@ const styles = StyleSheet.create({
     container:{
         flex:1,
         alignItems:'center',
-        justifyContent:'flex-start',
         position:'relative'
     },
     firstLayer:{
@@ -75,10 +76,9 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     infosContainer:{
-        height:200,
+        height:230,
         width:'90%',
         borderRadius:50,
-        justifyContent:'center',
         position:"absolute",
         bottom:40
     },
@@ -87,7 +87,6 @@ const styles = StyleSheet.create({
         height:40,
         width:'90%',
         borderRadius:20,
-        top:20,
         alignItems:'center',
         justifyContent:'center',
         alignSelf:'center'

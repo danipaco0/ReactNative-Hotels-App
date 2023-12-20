@@ -4,6 +4,20 @@ import { View,StyleSheet, Animated, Dimensions } from 'react-native';
 import * as Location from 'expo-location';
 import HotelInfo from '../Components/HotelInfo';
 import useGlobalState from '../Context/GlobalStateContext';
+import axios from 'axios';
+
+const options = {
+    method: 'GET',
+    url: 'https://apidojo-booking-v1.p.rapidapi.com/properties/get-hotel-photos',
+    params: {
+      hotel_ids: '',
+      languagecode: 'en-us'
+    },
+    headers: {
+      'X-RapidAPI-Key': 'bd5acb5bd0msh2b1b7ef314eb43cp1f9f91jsn41d22e3fdab7',
+      'X-RapidAPI-Host': 'apidojo-booking-v1.p.rapidapi.com'
+    }
+  };
 
 function getHotelsInfos(array){
     const hotels = [];
@@ -14,6 +28,24 @@ function getHotelsInfos(array){
     });
     return hotels;
 };
+
+async function getHotelPhotos(id){
+    options.params.hotel_ids = id;
+    try {
+        const response = await axios.request(options);
+        for(key in response.data["data"][id]){
+            if(response.data["data"][id][key]["3"]["0"]["tag"] != undefined && 
+            (response.data["data"][id][key]["3"]["0"]["tag"] == "Property building" || response.data["data"][id][key]["3"]["0"]["tag"] == "Facade/entrance")){
+                return response.data["url_prefix"]+response.data["data"][id][key][4];
+            }
+            else{
+                return response.data["url_prefix"]+response.data["data"][id][0][4];
+            }
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 export default function MapPage({route}) {
     const [location, setLocation] = useState(null);
@@ -50,13 +82,15 @@ export default function MapPage({route}) {
         if(hotel != ind){
             setHotel(ind);
             for(key in markers){
-                if(key["hotel_id"] == hotel){
+                if(key == hotel){
+                    const id = markers[key]["hotel_id"];
                     setHotelName(markers[key]["hotel_name"]);
                     setHotelLocation(markers[key]["city"]);
                     setHotelDistance(markers[key]["distance"]);
                     setHotelUrl(markers[key]["url"]);
-                    setPhoto(markers[key]["image_url"]);
                     setHotelPrice(markers[key]["price_breakdown"]["gross_price"]+" "+markers[key]["price_breakdown"]["currency"]);
+                    const fetchPhoto = await getHotelPhotos(id);
+                    setPhoto(fetchPhoto);
                     break;
                 }
             }
@@ -88,7 +122,7 @@ export default function MapPage({route}) {
                     ))}
             </MapView>
             <Animated.View style={[styles.preview,{top:infosAnimation}]}>
-                <HotelInfo backPress={closePreview} preview={{uri:photo}} hotelName={hotelName} 
+                <HotelInfo backPress={closePreview} preview={{uri:photo}} hotelName={hotelName}
                 hotelLocation={hotelLocation} hotelUrl={hotelUrl} centerDistance={hotelDistance} 
                 username={currentUser} price={hotelPrice}/>
             </Animated.View>
@@ -133,8 +167,9 @@ const styles = StyleSheet.create({
         backgroundColor:'transparent'
     },
     preview:{
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
+        flex:1,
+        width: "100%",
+        height: "100%",
         alignContent:'center', 
         alignSelf:'center', 
         position:'absolute'

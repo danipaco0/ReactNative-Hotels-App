@@ -65,24 +65,25 @@ export default function SearchPage(){
         filters.params.room_qty = rooms;
         try {
             const response = await axios.request(options);
-            do{
-                setLatitude(response.data[0].latitude);
-                setLongitude(response.data[0].longitude);
-                filters.params.latitude = latitude;
-                filters.params.longitude = longitude;
-                console.log(response.data[0].latitude);
-                if(latitude == undefined){
-                    alert("Please try again.");
+            if (response.data && response.data.length > 0) {
+                const locationData = response.data[0];
+                setLatitude(locationData.latitude);
+                setLongitude(locationData.longitude);
+                filters.params.latitude = locationData.latitude;
+                filters.params.longitude = locationData.longitude;
+                try {
+                    const hotelsResponse = await axios.request(filters);
+                    navigation.navigate("Map", {
+                        data: hotelsResponse.data,
+                        lat: locationData.latitude,
+                        long: locationData.longitude
+                    });
+                } catch (error) {
+                    console.error(error);
                 }
-                else{
-                    try {
-                        const response = await axios.request(filters);
-                        navigation.navigate("Map", {data:response.data, lat:latitude, long:longitude});
-                    } catch (error) {
-                        console.error(error);
-                    }
-                }
-            }while(response.data && response.data.length <= 0)
+            } else {
+                alert("Please try again.");
+            }
         } catch (error) {
             console.error(error);
         }
@@ -217,6 +218,6 @@ const styles = StyleSheet.create({
         width:'50%',
         borderRadius:25,
         backgroundColor:"#26BE81",
-        marginTop:20
+        top:50
     }
 })
