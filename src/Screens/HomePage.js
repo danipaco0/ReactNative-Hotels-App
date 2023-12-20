@@ -3,7 +3,6 @@ import InputBox from '../Components/InputBox';
 import MapView, { PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import { View,StyleSheet, Image, TouchableOpacity, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import * as Location from 'expo-location';
 import SearchIcon from '../assets/search_icon.png';
 import Paris from '../assets/paris.jpg';
 

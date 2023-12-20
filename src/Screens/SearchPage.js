@@ -1,5 +1,5 @@
 import { React, useState } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Modal, Button } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Modal } from 'react-native';
 import Calendar from 'react-native-calendars/src/calendar';
 import axios from 'axios';
 import { useNavigation } from "@react-navigation/native";
@@ -12,7 +12,7 @@ const options = {
       languagecode: 'fr'
     },
     headers: {
-      'X-RapidAPI-Key': 'bd5acb5bd0msh2b1b7ef314eb43cp1f9f91jsn41d22e3fdab7',
+      'X-RapidAPI-Key': '6a8481b17bmsh3a07156e02e0bb9p114047jsn22e3ff9daf63',
       'X-RapidAPI-Host': 'apidojo-booking-v1.p.rapidapi.com'
     }
 };
@@ -36,7 +36,7 @@ const filters = {
       languagecode: 'fr'
     },
     headers: {
-      'X-RapidAPI-Key': 'bd5acb5bd0msh2b1b7ef314eb43cp1f9f91jsn41d22e3fdab7',
+      'X-RapidAPI-Key': '6a8481b17bmsh3a07156e02e0bb9p114047jsn22e3ff9daf63',
       'X-RapidAPI-Host': 'apidojo-booking-v1.p.rapidapi.com'
     }
   };
@@ -55,37 +55,64 @@ export default function SearchPage(){
     const [showModalExtra, setShowModalExtra] = useState(false);
 
     const navigation = useNavigation();
-
+/*
+    const getCoordinates = async () => {
+        let{ status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted'){
+            setErrorMsg('Permission to access location was denied');
+            return;
+        }
+        const location = await Location.getCurrentPositionAsync({});
+        setLatitude(location.coords.latitude);
+        setLongitude(location.coords.longitude);
+        setCity("Your position");
+        console.log(latitude+" and "+longitude);
+    };
+*/
     async function searchHotels() {
-        options.params.text = city;
-        filters.params.arrival_date = dateFrom;
-        filters.params.departure_date = dateTo;
-        filters.params.guest_qty = adults;
-        filters.params.children_qty = children;
-        filters.params.room_qty = rooms;
-        try {
-            const response = await axios.request(options);
-            if (response.data && response.data.length > 0) {
-                const locationData = response.data[0];
-                setLatitude(locationData.latitude);
-                setLongitude(locationData.longitude);
-                filters.params.latitude = locationData.latitude;
-                filters.params.longitude = locationData.longitude;
-                try {
-                    const hotelsResponse = await axios.request(filters);
-                    navigation.navigate("Map", {
-                        data: hotelsResponse.data,
-                        lat: locationData.latitude,
-                        long: locationData.longitude
-                    });
-                } catch (error) {
-                    console.error(error);
+        if(!city){
+            alert("Please enter a location.");
+        }
+        else if(dateFrom === 'From' || dateTo === 'To'){
+            alert("Please select arrival and departure dates.");
+        }
+        else if(new Date(dateFrom) >= new Date(dateTo)){
+            alert("Arrival date must be earlier than departure date.");
+        }
+        else if(new Date(dateFrom) < new Date()){
+            alert("Wrong arrival date.");
+        }
+        else{
+            filters.params.arrival_date = dateFrom;
+            filters.params.departure_date = dateTo;
+            filters.params.guest_qty = adults;
+            filters.params.children_qty = children;
+            filters.params.room_qty = rooms;
+            options.params.text = city;
+            try {
+                const response = await axios.request(options);
+                if (response.data && response.data.length > 0) {
+                    const locationData = response.data[0];
+                    setLatitude(locationData.latitude);
+                    setLongitude(locationData.longitude);
+                    filters.params.latitude = locationData.latitude;
+                    filters.params.longitude = locationData.longitude;
+                    try {
+                        const hotelsResponse = await axios.request(filters);
+                        navigation.navigate("Map", {
+                            data: hotelsResponse.data,
+                            lat: locationData.latitude,
+                            long: locationData.longitude
+                        });
+                    } catch (error) {
+                        console.error(error);
+                    }
+                } else {
+                    alert("Please try again.");
                 }
-            } else {
-                alert("Please try again.");
+            } catch (error) {
+                console.error(error);
             }
-        } catch (error) {
-            console.error(error);
         }
     };
 
@@ -104,7 +131,7 @@ export default function SearchPage(){
                     <Text style={{opacity:0.5}}>{dateTo}</Text>
                 </TouchableOpacity>
             </View>
-            <TouchableOpacity style={[styles.searchBox, {marginTop:30, flexDirection:'row', justifyContent:'center', width:'90%'}]} onPress={() => {
+            <TouchableOpacity style={[styles.searchBox, {top:30, flexDirection:'row', justifyContent:'center', width:'90%'}]} onPress={() => {
                 setShowModalExtra(true);
             }}>
                 <Text style={{marginRight:10, opacity:0.5}}>{rooms}</Text>
@@ -113,7 +140,9 @@ export default function SearchPage(){
                 <View style={styles.dot}/>
                 <Text style={{marginLeft:10, opacity:0.5}}>{children}</Text>
             </TouchableOpacity>
-            <Button style={styles.searchButton} title="Search" color="#26BE81" onPress={() => searchHotels()}/>
+            <TouchableOpacity style={styles.searchButton} onPress={() => searchHotels()}>
+                <Text style={{color:'white', fontSize:16, fontWeight:'bold'}}>Search</Text>
+            </TouchableOpacity>
             <Modal visible={showModalDate} animationType="fade">
                 <Calendar style={{borderRadius:5, margin:40}} onDayPress={date => {
                     if(dateFromOrTo === 'From'){
@@ -129,7 +158,7 @@ export default function SearchPage(){
                     <View style={{flexDirection:'row', height:50, justifyContent:'left', alignContent:'center', alignItems:'center'}}>
                         <Text style={{paddingLeft:10, marginRight:50}}>Number of rooms</Text>
                         <TouchableOpacity onPress={() => {
-                            if(rooms > 0){
+                            if(rooms > 1){
                                 setRooms(rooms-1);
                             }
                         }}>
@@ -145,7 +174,7 @@ export default function SearchPage(){
                     <View style={{flexDirection:'row', height:50, justifyContent:'left', alignContent:'center', alignItems:'center'}}>
                         <Text style={{paddingLeft:10, marginRight:50}}>Adult (16+)</Text>
                         <TouchableOpacity onPress={() => {
-                            if(adults > 0){
+                            if(adults > 1){
                                 setAdults(adults-1);
                             }
                         }}>
@@ -206,6 +235,8 @@ const styles = StyleSheet.create({
     confirmButton:{
         alignItems:'center',
         justifyContent:'center',
+        left:20,
+        top:20,
         height:50,
         width:'70%',
         borderRadius:25,
@@ -214,10 +245,15 @@ const styles = StyleSheet.create({
     searchButton:{
         alignItems:'center',
         justifyContent:'center',
-        height:100,
+        height:50,
+        top:50,
         width:'50%',
         borderRadius:25,
-        backgroundColor:"#26BE81",
-        top:50
+        backgroundColor:"#26BE81"
+    },
+    inputContainer:{
+        flexDirection:'row',
+        alignItems:'center',
+        paddingLeft:20
     }
 })

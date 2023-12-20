@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Image, Text, Linking, TouchableOpacity } from 'react-native';
 import {BlurView} from 'expo-blur';
-import locationIcon from '../assets/location_icon.png';
+import hotelIcon from '../assets/hotel_icon.png';
 import favoriteIcon from '../assets/favorite_icon.png';
 import { addDoc } from 'firebase/firestore';
 import { favoritesRef } from '../../firebase';
@@ -30,7 +30,7 @@ export default function HotelInfo({preview, hotelName, hotelLocation, hotelUrl, 
             <BlurView intensity={100} style={[styles.infosContainer,{justifyContent:'space-between', borderRadius:20, overflow:'hidden'}]}>
                 <View style={{flexDirection:"column", top:15, justifyContent:'space-between'}}>
                     <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                        <Text style={{fontWeight:'bold', fontSize:25, color:'white', left:10, maxHeight:150, maxWidth:250}}>{hotelName}</Text>
+                        <Text style={{fontWeight:'bold', fontSize:25, color:'white', left:10, maxHeight:150, maxWidth:220}}>{hotelName}</Text>
                         <View style={{flexDirection:'column', maxWidth:150, right:20, alignSelf:'center'}}>
                             <Text style={{fontWeight:'900',fontSize:18, color:'white',alignSelf:'center'}}>{price}</Text>
                             <Text style={{fontWeight:'500',fontSize:15, color:'white', alignSelf:'center'}}>/per night</Text>
@@ -40,8 +40,8 @@ export default function HotelInfo({preview, hotelName, hotelLocation, hotelUrl, 
                         <View style={{flexDirection:'row'}}>
                             <Text style={{fontWeight:'500', fontSize:15, color:'white'}}>{hotelLocation}</Text>
                             <View style={{left:20, flexDirection:"row"}}>
-                                <Image source={locationIcon} style={{height:15,width:15}}/>
-                                <Text style={{fontWeight:'500', fontSize:15, left:10, color:'white'}}>{centerDistance} km to city</Text>
+                                <Image source={hotelIcon} style={{height:30,width:30,bottom:5}}/>
+                                <Text style={{fontWeight:'500', fontSize:15, left:5, color:'white'}}>{centerDistance} km from center</Text>
                             </View>
                         </View>
                     </View>

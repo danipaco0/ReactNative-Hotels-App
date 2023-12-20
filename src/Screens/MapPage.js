@@ -14,7 +14,7 @@ const options = {
       languagecode: 'en-us'
     },
     headers: {
-      'X-RapidAPI-Key': 'bd5acb5bd0msh2b1b7ef314eb43cp1f9f91jsn41d22e3fdab7',
+      'X-RapidAPI-Key': '6a8481b17bmsh3a07156e02e0bb9p114047jsn22e3ff9daf63',
       'X-RapidAPI-Host': 'apidojo-booking-v1.p.rapidapi.com'
     }
   };
@@ -64,18 +64,14 @@ export default function MapPage({route}) {
     const infosAnimation = useRef(new Animated.Value(1000)).current;
 
     useEffect(() => {
-        const requestLocation = async () => {
-            let{ status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted'){
-                setErrorMsg('Permission to access location was denied');
-                return;
-            }
-            const latitudeDelta = 0.09;
-            const longitudeDelta = 0.09;
-            console.log(cityLatitude+" DONE "+cityLongitude+" AND "+latitudeDelta);
-            setLocation({ cityLatitude, cityLongitude, latitudeDelta, longitudeDelta });
-        };
-        requestLocation();
+        console.log(cityLongitude);
+        const region = {
+            latitude: cityLatitude,
+            longitude: cityLongitude,
+            latitudeDelta: 0.1,
+            longitudeDelta:0.1
+        }
+        setLocation(region);
     }, [cityLatitude, cityLongitude, data]);
 
     const showHotelInfos = async (ind) => {
