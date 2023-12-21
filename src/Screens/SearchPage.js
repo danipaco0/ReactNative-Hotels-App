@@ -12,7 +12,7 @@ const options = {
       languagecode: 'fr'
     },
     headers: {
-      'X-RapidAPI-Key': '6a8481b17bmsh3a07156e02e0bb9p114047jsn22e3ff9daf63',
+      'X-RapidAPI-Key': 'YOUR-API-KEY',
       'X-RapidAPI-Host': 'apidojo-booking-v1.p.rapidapi.com'
     }
 };
@@ -36,7 +36,7 @@ const filters = {
       languagecode: 'fr'
     },
     headers: {
-      'X-RapidAPI-Key': '6a8481b17bmsh3a07156e02e0bb9p114047jsn22e3ff9daf63',
+      'X-RapidAPI-Key': 'YOUR-API-KEY',
       'X-RapidAPI-Host': 'apidojo-booking-v1.p.rapidapi.com'
     }
   };
