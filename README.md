@@ -2,6 +2,11 @@
 
 Welcome to the **ReactNative-Hotels-App**, a mobile application built using React Native. This app is designed to provide a hotel browser.
 
+## Disclaimer
+Please note that this application is a personal project developed for the sole purpose of practicing and enhancing my skills in React Native. It is not intended to be a serious or commercial application. The project serves as a platform for me to experiment with new ideas, learn new techniques, and build my knowledge in mobile application development.
+
+Any data, functionalities, or features within the app are purely for demonstration and learning purposes and should not be considered as fully functional or reliable for real-world use.
+
 ## Features
 
 - **Hotel Browsing**: Explore a variety of hotels with detailed information.
