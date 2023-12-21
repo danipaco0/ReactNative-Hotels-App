@@ -66,7 +66,7 @@ When pressing the search button, the fields are checked to avoid errors and a HT
 </div>
 
 ### `MapPage.js`
-Interactive map showing hotel locations. Each location is displayed with a marker on the map. If a marker is pressed, a new component is animated to preview the informations we have about the hotel in question. The preview page contains a picture of the hotel on the background, a back button to close the preview, a "Favorites" button to add the informations of the hotel to the database and a BlurView element containing the infos of the hotel with a button redirecting the user to a website in order to finalize the booking.
+Interactive map showing hotel locations. Each location is displayed with a marker on the map. If a marker is pressed, a new HotelInfo component is animated to preview the informations we have about the hotel in question. The preview page contains a picture of the hotel on the background, a back button to close the preview, a "Favorites" button to add the informations of the hotel to the database and a BlurView element containing the infos of the hotel with a button redirecting the user to a website in order to finalize the booking.
 <div align='center'>
   <img src="https://github.com/danipaco0/ReactNative-Hotels-App/assets/7733838/2c822fbb-a914-41c2-9df7-7cdc73489634" width='300'>
   <img src="https://github.com/danipaco0/ReactNative-Hotels-App/assets/7733838/a51ca5c7-66a0-4351-9547-15492b127e85" width='300'>
