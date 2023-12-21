@@ -6,41 +6,57 @@ import Logo from '../assets/logo.png'
 import { auth } from '../../firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useGlobalState } from '../Context/GlobalStateContext';
 
 const SignInScreen = () => {
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
     const navigation = useNavigation();
-    const { state, dispatch } = useGlobalState();
+    const { dispatch } = useGlobalState();
     const [user, setUser] = useState('');
 
-    const onSignInPressed = () => {
-        signInWithEmailAndPassword(auth,email,password)
-        .then((re)=>{
-            setUser(email);
-            dispatch({type:'SET_USER', payload:{user}})
-            navigation.navigate("Home")
-        })
-        .catch(error => alert(error.message))
+    useFocusEffect(
+        React.useCallback(() => {
+            setEmail('');
+            setPassword('');
+        },[])
+    );
+
+    const onSignInPressed = async () => {
+        if(email && password){
+            console.log("GOOD");
+            const userCredential = await signInWithEmailAndPassword(auth,email,password)
+            setUser(userCredential.user.email);
+            dispatch({type:'SET_USER', payload:{user: userCredential.user.email}})
+            navigation.navigate("HomeScreen")
+        }
+        else{
+            alert("Erreur");
+        }
     };
     
-    const onSignUpPressed = () => {
-        createUserWithEmailAndPassword(auth,email,password)
-        .then((userCredentials) => {
-            console.log(userCredentials);
-        })
-        .catch(error => alert(error.message))
+    const onSignUpPressed = async () => {
+        if(email && password){
+            const userCredential = await createUserWithEmailAndPassword(auth,email,password);
+            setUser(email);
+            dispatch({type:'SET_USER', payload:{user: userCredential.user.email}})
+            navigation.navigate("HomeScreen")
+        }
+        else{
+            alert("Erreur");
+        }
     };
 
     return (
         <View style={styles.container}>
             <Image source={Logo} style={styles.logoStyle}/>
-            <InputBox placeholder="Email" value={email} setValue={setEmail} borderColor={'white'}/>
-            <InputBox placeholder="Password" value={password} setValue={setPassword} borderColor={'white'}/>
-            <CustomButton action='Sign in' onPress={onSignInPressed} backcolor={'#26be81'} bordercolor={'#26be81'} textcolor={'white'}/>
-            <CustomButton action='Sign up' onPress={onSignUpPressed} backcolor={'white'} bordercolor={'#26be81'} textcolor={'#26be81'}/>
+            <View style={{top:100}}>
+                <InputBox placeholder="Email" value={email} setValue={setEmail} borderColor={'white'}/>
+                <InputBox placeholder="Password" value={password} setValue={setPassword} borderColor={'white'}/>
+                <CustomButton action='Sign in' onPress={onSignInPressed} backcolor={'#26be81'} bordercolor={'#26be81'} textcolor={'white'}/>
+                <CustomButton action='Sign up' onPress={onSignUpPressed} backcolor={'white'} bordercolor={'#26be81'} textcolor={'#26be81'}/>
+            </View>
         </View>
     )
 };
@@ -54,7 +70,7 @@ const styles = StyleSheet.create({
         width:200,
         height:100,
         borderRadius:10,
-        marginTop:10
+        top:50
     }
 });
 

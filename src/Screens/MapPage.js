@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { View,StyleSheet, Animated, Dimensions } from 'react-native';
-import * as Location from 'expo-location';
+import { View,StyleSheet, Animated } from 'react-native';
 import HotelInfo from '../Components/HotelInfo';
-import useGlobalState from '../Context/GlobalStateContext';
+import { useGlobalState } from '../Context/GlobalStateContext';
 import axios from 'axios';
 
 const options = {
@@ -56,7 +55,8 @@ export default function MapPage({route}) {
     const [hotelLocation, setHotelLocation] = useState("");
     const [hotelDistance, setHotelDistance] = useState("");
     const [hotelPrice, setHotelPrice] = useState("");
-    const [currentUser, setUser] = useState("");
+    const { state } = useGlobalState();
+    const user = state.user;
     const data = route.params?.data;
     const cityLatitude = route.params?.lat;
     const cityLongitude = route.params?.long;
@@ -75,9 +75,9 @@ export default function MapPage({route}) {
     }, [cityLatitude, cityLongitude, data]);
 
     const showHotelInfos = async (ind) => {
-        if(hotel != ind){
+        if(hotel !== ind){
             setHotel(ind);
-            for(key in markers){
+            for(let key in markers){
                 if(key == hotel){
                     const id = markers[key]["hotel_id"];
                     setHotelName(markers[key]["hotel_name"]);
@@ -90,11 +90,6 @@ export default function MapPage({route}) {
                     break;
                 }
             }
-        }
-        const UserProfile = () => {
-            const { state } = useGlobalState();
-            const user = state.user;
-            setUser(user);
         }
         Animated.timing(infosAnimation,{toValue:0,duration:500,useNativeDriver:false}).start();
     };
@@ -120,7 +115,7 @@ export default function MapPage({route}) {
             <Animated.View style={[styles.preview,{top:infosAnimation}]}>
                 <HotelInfo backPress={closePreview} preview={{uri:photo}} hotelName={hotelName}
                 hotelLocation={hotelLocation} hotelUrl={hotelUrl} centerDistance={hotelDistance} 
-                username={currentUser} price={hotelPrice}/>
+                username={user} price={hotelPrice}/>
             </Animated.View>
         </View>
     );

@@ -1,18 +1,25 @@
 import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, Text } from 'react-native';
 import ProfilePicture from '../assets/profile.png';
+import { useGlobalState } from '../Context/GlobalStateContext';
 
 export default function ProfilePage() {
+    const { state } = useGlobalState();
+    const user = state.user;
+
     return (
         <View style={styles.container}>
             <Image style={styles.picture} source={ProfilePicture}/>
+            <Text style={{top:20, fontSize:20, fontWeight:'bold'}}>{user.user}</Text>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container:{
-        flex:1
+        flex:1,
+        flexDirection:'column',
+        alignItems:'center'
     },
     picture:{
         width:100,

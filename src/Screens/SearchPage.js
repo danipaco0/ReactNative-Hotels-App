@@ -55,20 +55,7 @@ export default function SearchPage(){
     const [showModalExtra, setShowModalExtra] = useState(false);
 
     const navigation = useNavigation();
-/*
-    const getCoordinates = async () => {
-        let{ status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted'){
-            setErrorMsg('Permission to access location was denied');
-            return;
-        }
-        const location = await Location.getCurrentPositionAsync({});
-        setLatitude(location.coords.latitude);
-        setLongitude(location.coords.longitude);
-        setCity("Your position");
-        console.log(latitude+" and "+longitude);
-    };
-*/
+
     async function searchHotels() {
         if(!city){
             alert("Please enter a location.");
@@ -95,14 +82,14 @@ export default function SearchPage(){
                     const locationData = response.data[0];
                     setLatitude(locationData.latitude);
                     setLongitude(locationData.longitude);
-                    filters.params.latitude = locationData.latitude;
-                    filters.params.longitude = locationData.longitude;
+                    filters.params.latitude = latitude;
+                    filters.params.longitude = longitude;
                     try {
                         const hotelsResponse = await axios.request(filters);
                         navigation.navigate("Map", {
                             data: hotelsResponse.data,
-                            lat: locationData.latitude,
-                            long: locationData.longitude
+                            lat: latitude,
+                            long: longitude
                         });
                     } catch (error) {
                         console.error(error);

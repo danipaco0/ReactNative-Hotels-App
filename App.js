@@ -7,6 +7,7 @@ import Profile from './src/Screens/ProfilePage';
 import MenuBar from './src/Components/MenuBar';
 import Search from './src/Screens/SearchPage';
 import MapPage from './src/Screens/MapPage';
+import Favorites from './src/Screens/FavoritesPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,11 +17,12 @@ export default function App() {
     <GlobalStateProvider>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown:false}}>
+          <Stack.Screen name="Log in" component={SignInScreen}/>
           <Stack.Screen name="HomeScreen" component={MenuBar}/>
           <Stack.Screen name="SearchScreen" component={Search}/>
           <Stack.Screen name="Map" component={MapPage}/>
-          <Stack.Screen name="Log in" component={SignInScreen}/>
           <Stack.Screen name="Profile" component={Profile}/>
+          <Stack.Screen name="Favorites" component={Favorites}/>
         </Stack.Navigator>
       </NavigationContainer>
     </GlobalStateProvider>

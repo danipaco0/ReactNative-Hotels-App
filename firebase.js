@@ -20,10 +20,9 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-const auth = initializeAuth(app, {
+export const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage)
 });
 
 export const db = getFirestore(app);
 export const favoritesRef = collection(db, 'favorites');
-export default {auth};

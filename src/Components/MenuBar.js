@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet,TouchableOpacity,View,Text,Image, Dimensions } from 'react-native';
-import profilePicture from '../assets/profile.png';
+import { StyleSheet,View,Text,Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import ProfilePage from '../Screens/ProfilePage';
 import HomePage from '../Screens/HomePage';
+import FavoritesPage from '../Screens/FavoritesPage';
 
 const Tab = createBottomTabNavigator();
 
@@ -32,17 +32,22 @@ export default function MenuTabs(){
                                 )
                             }
                         }}/>
+            <Tab.Screen name="Favorites" component={FavoritesPage}
+                        options={{
+                            tabBarIcon:({focused})=>{
+                                return(
+                                    <View style={styles.menuItemPosition}>
+                                        <Image name="profilePicture" size={24} color={focused ? "#26BE81":"#111"}/>
+                                        <Text style={styles.menuItemOptions}>FAVORITES</Text>
+                                    </View>
+                                )
+                            }
+                        }}/>
         </Tab.Navigator>
     )
 }
 
 const styles = StyleSheet.create({
-    picture:{
-        width:40,
-        height:40,
-        borderRadius:20,
-        marginRight:20
-    },
     menuItemPosition:{
         alignItems:'center',
         justifyContent:'center'
