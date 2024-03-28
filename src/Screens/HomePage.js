@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         width:'90%',
         height:50,
         borderRadius:25,
-        marginTop:70
+        marginTop:80
     },
     searchIcon:{
         width:35,

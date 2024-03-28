@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TextInput, StyleSheet} from 'react-native';
 
-const InputBox = ({value, setValue, placeholder, bordercolor}) => {
+const InputBox = ({value, setValue, placeholder, bordercolor, secure}) => {
     const colorStyle = {
         ...styles.container,
         borderColor:bordercolor
@@ -13,6 +13,7 @@ const InputBox = ({value, setValue, placeholder, bordercolor}) => {
                 value={value}
                 onChangeText={setValue}
                 placeholder={placeholder}
+                secureTextEntry={secure}
             />
         </View>
     )
@@ -31,7 +32,8 @@ const styles = StyleSheet.create({
     },
     box:{
         fontSize:20,
-        color:'black'
+        color:'black',
+        textAlign:'center'
     }
 });
 

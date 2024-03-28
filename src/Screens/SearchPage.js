@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Modal } from 'react-native';
 import Calendar from 'react-native-calendars/src/calendar';
 import axios from 'axios';
@@ -49,8 +49,6 @@ export default function SearchPage(){
     const [rooms, setRooms] = useState(1);
     const [adults, setAdults] = useState(1);
     const [children, setChildren] = useState(0);
-    const [latitude, setLatitude] = useState();
-    const [longitude, setLongitude] = useState();
     const [showModalDate, setShowModalDate] = useState(false);
     const [showModalExtra, setShowModalExtra] = useState(false);
 
@@ -76,20 +74,23 @@ export default function SearchPage(){
             filters.params.children_qty = children;
             filters.params.room_qty = rooms;
             options.params.text = city;
+            console.log("FIRST = "+city);
             try {
                 const response = await axios.request(options);
                 if (response.data && response.data.length > 0) {
+                    console.log("SECOND = ",response.data);
                     const locationData = response.data[0];
-                    setLatitude(locationData.latitude);
-                    setLongitude(locationData.longitude);
-                    filters.params.latitude = latitude;
-                    filters.params.longitude = longitude;
+                    const updatedLatitude = locationData.latitude; 
+                    const updatedLongitude = locationData.longitude;
+                    filters.params.latitude = updatedLatitude;
+                    filters.params.longitude = updatedLongitude;
                     try {
                         const hotelsResponse = await axios.request(filters);
+                        console.log("THIRD = ",hotelsResponse.data.result);
                         navigation.navigate("Map", {
                             data: hotelsResponse.data,
-                            lat: latitude,
-                            long: longitude
+                            lat: updatedLatitude,
+                            long: updatedLongitude
                         });
                     } catch (error) {
                         console.error(error);

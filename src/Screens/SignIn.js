@@ -51,9 +51,9 @@ const SignInScreen = () => {
     return (
         <View style={styles.container}>
             <Image source={Logo} style={styles.logoStyle}/>
-            <View style={{top:100}}>
-                <InputBox placeholder="Email" value={email} setValue={setEmail} borderColor={'white'}/>
-                <InputBox placeholder="Password" value={password} setValue={setPassword} borderColor={'white'}/>
+            <View style={{top:150}}>
+                <InputBox placeholder="Email" value={email} setValue={setEmail} borderColor={'white'} secure={false}/>
+                <InputBox placeholder="Password" value={password} setValue={setPassword} borderColor={'white'} secure={true}/>
                 <CustomButton action='Sign in' onPress={onSignInPressed} backcolor={'#26be81'} bordercolor={'#26be81'} textcolor={'white'}/>
                 <CustomButton action='Sign up' onPress={onSignUpPressed} backcolor={'white'} bordercolor={'#26be81'} textcolor={'#26be81'}/>
             </View>
@@ -67,10 +67,10 @@ const styles = StyleSheet.create({
         justifyContent:'center'
     },
     logoStyle:{
-        width:200,
-        height:100,
+        width:350,
+        height:175,
         borderRadius:10,
-        top:50
+        top:100
     }
 });
 

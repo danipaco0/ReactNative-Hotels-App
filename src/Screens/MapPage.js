@@ -64,13 +64,14 @@ export default function MapPage({route}) {
     const infosAnimation = useRef(new Animated.Value(1000)).current;
 
     useEffect(() => {
-        console.log(cityLongitude);
+        console.log(markers);
         const region = {
             latitude: cityLatitude,
             longitude: cityLongitude,
-            latitudeDelta: 0.1,
-            longitudeDelta:0.1
+            latitudeDelta: 0.09,
+            longitudeDelta:0.09
         }
+        console.log("THIS ",cityLatitude," AND THIS ",cityLongitude);
         setLocation(region);
     }, [cityLatitude, cityLongitude, data]);
 
@@ -79,6 +80,7 @@ export default function MapPage({route}) {
             setHotel(ind);
             for(let key in markers){
                 if(key == hotel){
+                    console.log("HERE");
                     const id = markers[key]["hotel_id"];
                     setHotelName(markers[key]["hotel_name"]);
                     setHotelLocation(markers[key]["city"]);
@@ -87,6 +89,7 @@ export default function MapPage({route}) {
                     setHotelPrice(markers[key]["price_breakdown"]["gross_price"]+" "+markers[key]["price_breakdown"]["currency"]);
                     const fetchPhoto = await getHotelPhotos(id);
                     setPhoto(fetchPhoto);
+                    console.log(photo);
                     break;
                 }
             }
