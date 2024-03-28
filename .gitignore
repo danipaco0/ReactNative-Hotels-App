@@ -36,4 +36,4 @@ yarn-error.*
 
 
 # Ignore files
-firebase.js
+/firebase.js
